@@ -23,26 +23,26 @@ import com.target.targetcasestudy.R
  */
 class PaymentDialogFragment : DialogFragment() {
 
-  private lateinit var submitButton: Button
-  private lateinit var creditCardInput: EditText
+    private lateinit var submitButton: Button
+    private lateinit var creditCardInput: EditText
 
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
-    val root = inflater.inflate(R.layout.dialog_payment, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val root = inflater.inflate(R.layout.dialog_payment, container, false)
 
-    submitButton = root.findViewById(R.id.submit)
-    creditCardInput = root.findViewById(R.id.card_number)
-    val cancelButton: Button = root.findViewById(R.id.cancel)
+        submitButton = root.findViewById(R.id.submit)
+        creditCardInput = root.findViewById(R.id.card_number)
+        val cancelButton: Button = root.findViewById(R.id.cancel)
 
-    cancelButton.setOnClickListener { dismiss() }
-    submitButton.setOnClickListener { dismiss() }
+        cancelButton.setOnClickListener { dismiss() }
+        submitButton.setOnClickListener { dismiss() }
 
-    // TODO enable the submit button based on card number validity using Validators.validateCreditCard()
+        // TODO enable the submit button based on card number validity using Validators.validateCreditCard()
 
-    return root
-  }
+        return root
+    }
 
 }

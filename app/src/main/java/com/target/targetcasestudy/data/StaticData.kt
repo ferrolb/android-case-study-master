@@ -1,6 +1,8 @@
 package com.target.targetcasestudy.data
 
 // TODO this can be deleted once you start fetching the data from the API
+
+// TODO : https://api.target.com/mobile_case_study_deals/v1
 object StaticData {
   val deals: List<DealItem> = listOf(
     DealItem(
