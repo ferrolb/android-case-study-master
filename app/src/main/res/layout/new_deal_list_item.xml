@@ -54,9 +54,34 @@
         android:textSize="22sp"
         android:textColor="@color/case_study_text_color"
         tools:text="$15.00"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/circle"
         app:layout_constraintStart_toStartOf="@+id/divider"
         app:layout_constraintBottom_toBottomOf="@+id/deal_list_item_image_view" />
+
+    <ImageView
+        android:id="@+id/circle"
+        android:layout_width="32sp"
+        android:layout_height="32sp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="18dp"
+        android:src="@drawable/circle"
+        android:layout_centerHorizontal="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/end_divider" />
+
+    <TextView
+        android:id="@+id/location_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:text="D10"
+        android:textStyle="bold"
+        android:textColor="@color/red_color"
+        android:layout_centerHorizontal="true"
+        app:layout_constraintBottom_toBottomOf="@+id/circle"
+        app:layout_constraintStart_toStartOf="@+id/circle"
+        app:layout_constraintEnd_toEndOf="@+id/circle"
+        app:layout_constraintTop_toTopOf="@+id/circle" />
 
     <View
         android:id="@+id/end_divider"
