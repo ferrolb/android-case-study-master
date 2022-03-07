@@ -60,7 +60,7 @@ class DealListFragment : Fragment() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DealItemViewHolder {
       val inflater = LayoutInflater.from(parent.context)
 //    val view = inflater.inflate(R.layout.deal_list_item, parent, false)
-      val view = inflater.inflate(R.layout.new_deal_list_item, parent, false)
+      val view = inflater.inflate(R.layout.deal_list_item, parent, false)
       return DealItemViewHolder(view)
     }
 
