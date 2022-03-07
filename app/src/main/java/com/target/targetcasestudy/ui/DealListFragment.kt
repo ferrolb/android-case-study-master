@@ -8,10 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.target.targetcasestudy.R
+import com.target.targetcasestudy.data.DataFetcher
 import com.target.targetcasestudy.data.DealItem
 import com.target.targetcasestudy.data.StaticData
 import com.target.targetcasestudy.data.TargetApi
@@ -45,23 +48,10 @@ class DealListFragment : Fragment() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    val retrofit: Retrofit = Retrofit.Builder()
-      .baseUrl("https://api.target.com/mobile_case_study_deals/v1/")
-//      .addConverterFactory(MoshiConverterFactory.create())
-      .addConverterFactory(ScalarsConverterFactory.create())
-      .build()
-
-    val targetApi: TargetApi = retrofit.create(TargetApi::class.java)
-    val targetRequest = targetApi.fetchDealData()
-    targetRequest.enqueue(object: Callback<String>{
-      override fun onFailure(call: Call<String>, t: Throwable) {
-        Log.e(TAG, "Failed to fetch target data", t)
-      }
-
-      override fun onResponse(call: Call<String>, response: Response<String>) {
-        Log.d(TAG, "Response received: ${response.body()}")
-      }
-    })
+    val targetLiveData: LiveData<String> = DataFetcher().fetchDealData()
+    targetLiveData.observe( this, Observer { responseString ->
+      Log.d(TAG, "Response received: $responseString") }
+    )
 
   }
 
