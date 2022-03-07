@@ -2,6 +2,7 @@ package com.target.targetcasestudy.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +14,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.target.targetcasestudy.R
 import com.target.targetcasestudy.data.DealItem
 import com.target.targetcasestudy.data.StaticData
+import com.target.targetcasestudy.data.TargetApi
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
-
+private const val TAG = "DealListFragment"
 class DealListFragment : Fragment() {
 
   interface Callbacks {
@@ -31,6 +39,30 @@ class DealListFragment : Fragment() {
   override fun onDetach() {
     super.onDetach()
     callbacks = null
+  }
+
+
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    val retrofit: Retrofit = Retrofit.Builder()
+      .baseUrl("https://api.target.com/mobile_case_study_deals/v1/")
+//      .addConverterFactory(MoshiConverterFactory.create())
+      .addConverterFactory(ScalarsConverterFactory.create())
+      .build()
+
+    val targetApi: TargetApi = retrofit.create(TargetApi::class.java)
+    val targetRequest = targetApi.fetchDealData()
+    targetRequest.enqueue(object: Callback<String>{
+      override fun onFailure(call: Call<String>, t: Throwable) {
+        Log.e(TAG, "Failed to fetch target data", t)
+      }
+
+      override fun onResponse(call: Call<String>, response: Response<String>) {
+        Log.d(TAG, "Response received: ${response.body()}")
+      }
+    })
+
   }
 
   override fun onCreateView(
