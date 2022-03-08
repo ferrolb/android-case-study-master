@@ -8,86 +8,92 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.target.targetcasestudy.R
-import com.target.targetcasestudy.data.DataFetcher
 import com.target.targetcasestudy.data.DealItem
-import com.target.targetcasestudy.data.Products
+import com.target.targetcasestudy.data.ProductsViewModel
 import com.target.targetcasestudy.data.StaticData
 
 private const val TAG = "DealListFragment"
+
 class DealListFragment : Fragment() {
 
-  interface Callbacks {
-    fun onDealSelected(dealId: Int)
-  }
+    private lateinit var productsViewModel: ProductsViewModel
 
-  private var callbacks: Callbacks? = null
-
-  override fun onAttach(context: Context) {
-    super.onAttach(context)
-    callbacks = context as Callbacks?
-  }
-
-  override fun onDetach() {
-    super.onDetach()
-    callbacks = null
-  }
-
-
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    val targetLiveData: LiveData<Products> = DataFetcher().fetchDealData()
-    targetLiveData.observe( this, Observer { responseString ->
-      Log.d(TAG, "Response received: $responseString") }
-    )
-
-  }
-
-  override fun onCreateView(
-    inflater: LayoutInflater, container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View? {
-    val view =  inflater.inflate(R.layout.fragment_deal_list, container, false)
-
-    view.findViewById<RecyclerView>(R.id.recycler_view).layoutManager = LinearLayoutManager(requireContext())
-    view.findViewById<RecyclerView>(R.id.recycler_view).adapter = DealItemAdapter()
-
-    return view
-  }
-
-  private inner class DealItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
-    lateinit var deal: DealItem
-    init {
-      itemView.setOnClickListener(this)
-    }
-    override fun onClick(v: View?) {
-      callbacks?.onDealSelected(deal.id)
-    }
-  }
-
-  private inner class DealItemAdapter : RecyclerView.Adapter<DealItemViewHolder>() {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DealItemViewHolder {
-      val inflater = LayoutInflater.from(parent.context)
-//    val view = inflater.inflate(R.layout.deal_list_item, parent, false)
-      val view = inflater.inflate(R.layout.deal_list_item, parent, false)
-      return DealItemViewHolder(view)
+    interface Callbacks {
+        fun onDealSelected(dealId: Int)
     }
 
-    override fun getItemCount(): Int {
-      return StaticData.deals.size
+    private var callbacks: Callbacks? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        callbacks = context as Callbacks?
     }
 
-    override fun onBindViewHolder(viewHolder: DealItemViewHolder, position: Int) {
-      val item = StaticData.deals[position]
-      viewHolder.deal = item
-      viewHolder.itemView.findViewById<TextView>(R.id.deal_list_item_title).text = item.title
-      viewHolder.itemView.findViewById<TextView>(R.id.deal_list_item_price).text = item.price
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
     }
-  }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        productsViewModel = ViewModelProviders.of(this).get(ProductsViewModel::class.java)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        productsViewModel.productsLiveData.observe( viewLifecycleOwner, Observer { products ->
+            Log.d(TAG, "Products retreived:$products")
+        })
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_deal_list, container, false)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = DealItemAdapter()
+
+        return view
+    }
+
+    private inner class DealItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
+        lateinit var deal: DealItem
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            callbacks?.onDealSelected(deal.id)
+        }
+    }
+
+    private inner class DealItemAdapter : RecyclerView.Adapter<DealItemViewHolder>() {
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DealItemViewHolder {
+            val inflater = LayoutInflater.from(parent.context)
+            val view = inflater.inflate(R.layout.deal_list_item, parent, false)
+            return DealItemViewHolder(view)
+        }
+
+        override fun getItemCount(): Int {
+            return StaticData.deals.size
+        }
+
+        override fun onBindViewHolder(viewHolder: DealItemViewHolder, position: Int) {
+            val item = StaticData.deals[position]
+            viewHolder.deal = item
+            viewHolder.itemView.findViewById<TextView>(R.id.deal_list_item_title).text = item.title
+            viewHolder.itemView.findViewById<TextView>(R.id.deal_list_item_price).text = item.price
+        }
+    }
 }
