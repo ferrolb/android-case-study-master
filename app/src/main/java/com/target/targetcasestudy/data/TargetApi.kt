@@ -5,5 +5,5 @@ import retrofit2.http.GET
 
 interface TargetApi {
     @GET("deals")
-    fun fetchDealData(): Call<String>
+    fun fetchDealData(): Call<Products>
 }

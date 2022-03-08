@@ -12,18 +12,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
 import com.target.targetcasestudy.R
 import com.target.targetcasestudy.data.DataFetcher
 import com.target.targetcasestudy.data.DealItem
+import com.target.targetcasestudy.data.Products
 import com.target.targetcasestudy.data.StaticData
-import com.target.targetcasestudy.data.TargetApi
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 
 private const val TAG = "DealListFragment"
 class DealListFragment : Fragment() {
@@ -48,7 +41,7 @@ class DealListFragment : Fragment() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    val targetLiveData: LiveData<String> = DataFetcher().fetchDealData()
+    val targetLiveData: LiveData<Products> = DataFetcher().fetchDealData()
     targetLiveData.observe( this, Observer { responseString ->
       Log.d(TAG, "Response received: $responseString") }
     )
