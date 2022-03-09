@@ -13,4 +13,7 @@
     <string name="picture_of_deal_item">Picture of deal item</string>
   <string name="grey_circle_around_aisle_location">Grey circle around aisle location</string>
   <string name="default_location_text">D10</string>
+    <string name="image_of_deal_item">Image of deal item</string>
+  <string name="add_to_list">add to list</string>
+  <string name="add_to_cart">add to cart</string>
 </resources>

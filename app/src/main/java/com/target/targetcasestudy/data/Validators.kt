@@ -22,5 +22,5 @@ package com.target.targetcasestudy.data
  * otherwise false
  */
 fun validateCreditCard(creditCardNumber: String): Boolean {
-  return false
+    return false
 }
