@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(), DealListFragment.Callbacks {
         }
     }
 
-    override fun onDealSelected(dealId: Int) {
+    override fun onDealSelected(dealId: Int?) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, DealItemFragment())
             .addToBackStack(null)

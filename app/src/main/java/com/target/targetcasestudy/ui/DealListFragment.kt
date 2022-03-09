@@ -15,16 +15,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.target.targetcasestudy.R
 import com.target.targetcasestudy.data.DealItem
 import com.target.targetcasestudy.data.ProductsViewModel
-import com.target.targetcasestudy.data.StaticData
 
 private const val TAG = "DealListFragment"
 
 class DealListFragment : Fragment() {
 
     private lateinit var productsViewModel: ProductsViewModel
+    private lateinit var dealsRecyclerView: RecyclerView
 
     interface Callbacks {
-        fun onDealSelected(dealId: Int)
+        fun onDealSelected(dealId: Int?)
     }
 
     private var callbacks: Callbacks? = null
@@ -49,6 +49,7 @@ class DealListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         productsViewModel.productsLiveData.observe( viewLifecycleOwner, Observer { products ->
             Log.d(TAG, "Products retreived:$products")
+            dealsRecyclerView.adapter = DealItemAdapter(products.products ?: emptyList())
         })
     }
 
@@ -57,9 +58,9 @@ class DealListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_deal_list, container, false)
-        val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = DealItemAdapter()
+        dealsRecyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+        dealsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+//        recyclerView.adapter = DealItemAdapter()
 
         return view
     }
@@ -77,7 +78,7 @@ class DealListFragment : Fragment() {
         }
     }
 
-    private inner class DealItemAdapter : RecyclerView.Adapter<DealItemViewHolder>() {
+    private inner class DealItemAdapter(private val dealItems: List<DealItem>) : RecyclerView.Adapter<DealItemViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DealItemViewHolder {
             val inflater = LayoutInflater.from(parent.context)
@@ -86,14 +87,14 @@ class DealListFragment : Fragment() {
         }
 
         override fun getItemCount(): Int {
-            return StaticData.deals.size
+            return dealItems.size
         }
 
         override fun onBindViewHolder(viewHolder: DealItemViewHolder, position: Int) {
-            val item = StaticData.deals[position]
+            val item = dealItems[position]
             viewHolder.deal = item
             viewHolder.itemView.findViewById<TextView>(R.id.deal_list_item_title).text = item.title
-            viewHolder.itemView.findViewById<TextView>(R.id.deal_list_item_price).text = item.price
+            viewHolder.itemView.findViewById<TextView>(R.id.deal_list_item_price).text = item.regularPrice?.displayString
         }
     }
 }
