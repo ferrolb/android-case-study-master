@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.target.targetcasestudy.ui.DealItemFragment
+import com.target.targetcasestudy.ui.DealItemDetailFragment
 import com.target.targetcasestudy.ui.DealListFragment
 import com.target.targetcasestudy.ui.payment.PaymentDialogFragment
 
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), DealListFragment.Callbacks {
 
     override fun onDealSelected(dealId: Int?) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, DealItemFragment())
+            .replace(R.id.container, DealItemDetailFragment.newInstance(dealId))
             .addToBackStack(null)
             .commit()
     }

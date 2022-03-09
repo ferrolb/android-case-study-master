@@ -1,6 +1,7 @@
 package com.target.targetcasestudy.data
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 //data class DealItem(
 //    var id: Int,
@@ -14,6 +15,7 @@ data class Products(
     @field:Json(name = "products")
     var products: List<DealItem>?
 )
+
 
 data class DealItem(
     @field:Json(name = "id") val id: Int?,
