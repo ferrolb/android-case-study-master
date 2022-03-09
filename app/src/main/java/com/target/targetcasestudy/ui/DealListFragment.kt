@@ -2,6 +2,9 @@ package com.target.targetcasestudy.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -47,8 +50,8 @@ class DealListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        productsViewModel.productsLiveData.observe( viewLifecycleOwner, Observer { products ->
-            Log.d(TAG, "Products retreived:$products")
+        productsViewModel.productsLiveData.observe(viewLifecycleOwner, Observer { products ->
+            Log.d(TAG, "Products retrieved:$products")
             dealsRecyclerView.adapter = DealItemAdapter(products.products ?: emptyList())
         })
     }
@@ -58,10 +61,8 @@ class DealListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_deal_list, container, false)
-        dealsRecyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
+        dealsRecyclerView = view.findViewById(R.id.recycler_view)
         dealsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-//        recyclerView.adapter = DealItemAdapter()
-
         return view
     }
 
@@ -78,7 +79,8 @@ class DealListFragment : Fragment() {
         }
     }
 
-    private inner class DealItemAdapter(private val dealItems: List<DealItem>) : RecyclerView.Adapter<DealItemViewHolder>() {
+    private inner class DealItemAdapter(private val dealItems: List<DealItem>) :
+        RecyclerView.Adapter<DealItemViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DealItemViewHolder {
             val inflater = LayoutInflater.from(parent.context)
@@ -94,7 +96,21 @@ class DealListFragment : Fragment() {
             val item = dealItems[position]
             viewHolder.deal = item
             viewHolder.itemView.findViewById<TextView>(R.id.deal_list_item_title).text = item.title
-            viewHolder.itemView.findViewById<TextView>(R.id.deal_list_item_price).text = item.regularPrice?.displayString
+            viewHolder.itemView.findViewById<TextView>(R.id.deal_list_item_price).text =
+                item.regularPrice?.displayString
+
+            // TODO: once the app is localized this would have to be addressed properly
+            val spannable = SpannableString(SHIP_OR_TEXT)
+            spannable.setSpan(
+                ForegroundColorSpan(resources.getColor(R.color.or_text_color)),
+                5, 7,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            viewHolder.itemView.findViewById<TextView>(R.id.ship_or).text = spannable
         }
+    }
+
+    companion object {
+        // In real life this would be in the string table for localization
+        const val SHIP_OR_TEXT = "ship or"
     }
 }

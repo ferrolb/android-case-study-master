@@ -10,4 +10,7 @@
   <string name="submit">Submit</string>
   <string name="cancel">Cancel</string>
   <string name="credit_card_number_hint">Credit card number</string>
+    <string name="picture_of_deal_item">Picture of deal item</string>
+  <string name="grey_circle_around_aisle_location">Grey circle around aisle location</string>
+  <string name="default_location_text">D10</string>
 </resources>

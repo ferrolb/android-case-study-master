@@ -15,7 +15,8 @@
         android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/flowers"/>
+        android:src="@drawable/flowers"
+        android:contentDescription="@string/picture_of_deal_item" />
 
     <TextView
         android:id="@+id/deal_list_item_title"
@@ -53,9 +54,24 @@
         android:textSize="22sp"
         android:textColor="@color/case_study_text_color"
         tools:text="$15.00"
-        app:layout_constraintEnd_toStartOf="@id/circle"
+        app:layout_constraintEnd_toStartOf="@id/ship_or"
         app:layout_constraintStart_toStartOf="@+id/divider"
         app:layout_constraintBottom_toBottomOf="@+id/deal_list_item_image_view" />
+
+    <TextView
+        android:id="@+id/ship_or"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/case_study_text_color"
+        tools:text="ship or"
+        app:layout_constraintEnd_toStartOf="@id/circle"
+        app:layout_constraintTop_toTopOf="@id/circle"
+        app:layout_constraintStart_toEndOf="@+id/deal_list_item_price"
+        app:layout_constraintBottom_toBottomOf="@+id/circle" />
 
     <ImageView
         android:id="@+id/circle"
@@ -66,14 +82,15 @@
         android:src="@drawable/circle"
         android:layout_centerHorizontal="true"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/end_divider" />
+        app:layout_constraintBottom_toTopOf="@+id/end_divider"
+        android:contentDescription="@string/grey_circle_around_aisle_location" />
 
     <TextView
         android:id="@+id/location_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:text="D10"
+        android:text="@string/default_location_text"
         android:textStyle="bold"
         android:textColor="@color/red_color"
         android:layout_centerHorizontal="true"
