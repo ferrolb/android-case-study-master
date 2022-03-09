@@ -1,6 +1,7 @@
 package com.target.targetcasestudy.ui
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -9,15 +10,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.target.targetcasestudy.R
 import com.target.targetcasestudy.data.DealItem
 import com.target.targetcasestudy.data.ProductsViewModel
+import java.util.*
 
 private const val TAG = "DealListFragment"
 
@@ -69,9 +74,19 @@ class DealListFragment : Fragment() {
     private inner class DealItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
         lateinit var deal: DealItem
+        var imageView: ImageView
+        var priceView: TextView
+        var titleView: TextView
+        var locationTextView: TextView
+        var shipOrView: TextView
 
         init {
             itemView.setOnClickListener(this)
+            imageView = itemView.findViewById(R.id.deal_list_item_image_view)
+            priceView = itemView.findViewById(R.id.deal_list_item_price)
+            titleView = itemView.findViewById(R.id.deal_list_item_title)
+            locationTextView = itemView.findViewById(R.id.location_text)
+            shipOrView = itemView.findViewById(R.id.ship_or)
         }
 
         override fun onClick(v: View?) {
@@ -92,20 +107,35 @@ class DealListFragment : Fragment() {
             return dealItems.size
         }
 
+        // This is for the deprecation of the non-themed resources.getColor() call
+        @RequiresApi(Build.VERSION_CODES.M)
         override fun onBindViewHolder(viewHolder: DealItemViewHolder, position: Int) {
             val item = dealItems[position]
             viewHolder.deal = item
-            viewHolder.itemView.findViewById<TextView>(R.id.deal_list_item_title).text = item.title
-            viewHolder.itemView.findViewById<TextView>(R.id.deal_list_item_price).text =
-                item.regularPrice?.displayString
 
-            // TODO: once the app is localized this would have to be addressed properly
+            // load the image from image url
+            val url =
+                if (viewHolder.deal.imageUrl != null) "${viewHolder.deal.imageUrl}?w=360" else null
+            Glide.with(viewHolder.itemView)
+                .load(url)
+                .centerCrop()
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .error(R.drawable.ic_launcher_foreground)
+                .fallback(R.drawable.flowers)
+                .into(viewHolder.imageView)
+
+            viewHolder.titleView.text = item.title
+            viewHolder.priceView.text = item.regularPrice?.displayString
+            viewHolder.locationTextView.text = item.aisle?.toUpperCase(Locale.getDefault()) ?: ""
+
+            // TODO: LOCALIZATION - once the app is localized this would have to be addressed
             val spannable = SpannableString(SHIP_OR_TEXT)
             spannable.setSpan(
-                ForegroundColorSpan(resources.getColor(R.color.or_text_color)),
+                ForegroundColorSpan(resources.getColor(R.color.or_text_color, null)),
                 5, 7,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            viewHolder.itemView.findViewById<TextView>(R.id.ship_or).text = spannable
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            viewHolder.shipOrView.text = spannable
         }
     }
 
