@@ -32,7 +32,7 @@ class DealListFragment : Fragment() {
     private lateinit var dealsRecyclerView: RecyclerView
 
     interface Callbacks {
-        fun onDealSelected(dealId: Int?)
+        fun onDealSelected(dealItem: DealItem)
     }
 
     private var callbacks: Callbacks? = null
@@ -90,7 +90,7 @@ class DealListFragment : Fragment() {
         }
 
         override fun onClick(v: View?) {
-            callbacks?.onDealSelected(deal.id)
+            callbacks?.onDealSelected(deal)
         }
     }
 
