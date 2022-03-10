@@ -34,7 +34,7 @@ fun validateCreditCard(creditCardNumber: String): Boolean {
         return false
     }
 
-    return passesLuhnFormula(creditCardNumber)
+    return checkLuhn(creditCardNumber) 
 }
 
 /**
@@ -45,27 +45,48 @@ The Luhn Formula:
 - Add all the numbers together
 - The check digit (the last number of the card) is the amount that you would need to add to get a multiple of 10 (Modulo 10)
  */
-private fun passesLuhnFormula(cCNumber: String): Boolean {
+private fun checkLuhn(purportedCC: String): Boolean {
     val zeroAscii = '0'.toInt()
-    val lastDigit = cCNumber.last().toInt() - zeroAscii
-    val cCNumberMinusLast = cCNumber.substring(0, cCNumber.length - 1)
-    val cCNumberMinusLastReversed = cCNumberMinusLast.reversed()
-//    println("$cCNumberMinusLastReversed")
-    var total = 0
-    for (i in cCNumberMinusLastReversed.indices) {
-        var result = cCNumberMinusLastReversed[i].toInt() - zeroAscii
-        // since we are 0-based indices, we check even instead of odd.
-        if (i % 2 == 0) {
-            val digit = cCNumberMinusLastReversed[i].toInt() - zeroAscii
-            result = digit * 2
-            if (result > 9) {
-                result -= 9
-            }
+    val nDigits = purportedCC.length
+    var sum = purportedCC.last().toInt() - zeroAscii
+    val parity = (nDigits-2) % 2
+    for (i in 0..(nDigits - 2)) {
+        var digit = purportedCC[i].toInt() - zeroAscii
+        if (i % 2 == parity) {
+            digit *= 2
         }
-//        print("$result ")
-        total += result
+        if (digit > 9) {
+            digit -= 9
+        }
+        sum += digit
     }
-//    println("")
-//    println("Total:$total, lastDigit:$lastDigit, ccNumber:$cCNumber")
-    return total % 10 == lastDigit
+    return (sum % 10) == 0
 }
+
+/**
+ * One referenced on website no worky
+*/
+//private fun passesLuhnFormula(cCNumber: String): Boolean {
+//    val zeroAscii = '0'.toInt()
+//    val lastDigit = cCNumber.last().toInt() - zeroAscii
+//    val cCNumberMinusLast = cCNumber.substring(0, cCNumber.length - 1)
+//    val cCNumberMinusLastReversed = cCNumberMinusLast.reversed()
+////    println("$cCNumberMinusLastReversed")
+//    var total = 0
+//    for (i in cCNumberMinusLastReversed.indices) {
+//        var result = cCNumberMinusLastReversed[i].toInt() - zeroAscii
+//        // since we are 0-based indices, we check even instead of odd.
+//        if (i % 2 == 0) {
+//            val digit = cCNumberMinusLastReversed[i].toInt() - zeroAscii
+//            result = digit * 2
+//            if (result > 9) {
+//                result -= 9
+//            }
+//        }
+////        print("$result ")
+//        total += result
+//    }
+////    println("")
+////    println("Total:$total, lastDigit:$lastDigit, ccNumber:$cCNumber")
+//    return total % 10 == lastDigit
+//}
