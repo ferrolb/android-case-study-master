@@ -1,5 +1,6 @@
 package com.target.targetcasestudy.data
 
+private val regEx = Regex("[0-9]+")
 /**
  * For an explanation of how to validate credit card numbers read:
  *
@@ -22,5 +23,49 @@ package com.target.targetcasestudy.data
  * otherwise false
  */
 fun validateCreditCard(creditCardNumber: String): Boolean {
-    return false
+
+    // is card number correct length
+    if (creditCardNumber.isEmpty() || creditCardNumber.length < 13 || creditCardNumber.length > 19) {
+        return false
+    }
+
+    // does card number contain only digits
+    if (!creditCardNumber.matches(regEx)) {
+        return false
+    }
+
+    return passesLuhnFormula(creditCardNumber)
+}
+
+/**
+The Luhn Formula:
+- Drop the last digit from the number. The last digit is what we want to check against
+- Reverse the numbers
+- Multiply the digits in odd positions (1, 3, 5, etc.) by 2 and subtract 9 to all any result higher than 9
+- Add all the numbers together
+- The check digit (the last number of the card) is the amount that you would need to add to get a multiple of 10 (Modulo 10)
+ */
+private fun passesLuhnFormula(cCNumber: String): Boolean {
+    val zeroAscii = '0'.toInt()
+    val lastDigit = cCNumber.last().toInt() - zeroAscii
+    val cCNumberMinusLast = cCNumber.substring(0, cCNumber.length - 1)
+    val cCNumberMinusLastReversed = cCNumberMinusLast.reversed()
+//    println("$cCNumberMinusLastReversed")
+    var total = 0
+    for (i in cCNumberMinusLastReversed.indices) {
+        var result = cCNumberMinusLastReversed[i].toInt() - zeroAscii
+        // since we are 0-based indices, we check even instead of odd.
+        if (i % 2 == 0) {
+            val digit = cCNumberMinusLastReversed[i].toInt() - zeroAscii
+            result = digit * 2
+            if (result > 9) {
+                result -= 9
+            }
+        }
+//        print("$result ")
+        total += result
+    }
+//    println("")
+//    println("Total:$total, lastDigit:$lastDigit, ccNumber:$cCNumber")
+    return total % 10 == lastDigit
 }
